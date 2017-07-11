@@ -33,21 +33,21 @@ consul keygen
 ```
 # Non Boostrap Consul Server
 ---------------------------
-cd /root/consul_demo
+cd /root/consul
 cp server.json config.json
 ```
 
 ```
 # Consul Agent Server
 ---------------------------
-apt-get install apache2 -y
-cd /root/consul_demo
+yum -y install httpd
+cd /root/consul
 cp agent.json config.json
 ```
 
 ```
 ./setup.sh HOSTNAME ENCRYPT_KEY IP_OF_BOOTSTRAP IP_NON_BOOTSTRAP
-nohup consul agent -config-dir /root/consul_demo/config.json &
+nohup consul agent -config-dir /root/consul/config.json &
 
 # Now lets test on our agent server.
 curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/key1
@@ -66,7 +66,7 @@ After=network-online.target
 EnvironmentFile=-/etc/sysconfig/consul
 Environment=GOMAXPROCS=2
 Restart=on-failure
-ExecStart=/usr/bin/consul agent -config-dir=/root/consul_demo/config.json -rejoin
+ExecStart=/usr/bin/consul agent -config-dir=/root/consul/config.json -rejoin
 ExecReload=/bin/kill -HUP $MAINPID
 KillSignal=SIGTERM
 
