@@ -15,13 +15,17 @@ unzip consul_0.8.5_linux_amd64.zip
 rm -rf consul_0.8.5_linux_amd64.zip
 mv consul /usr/bin/
 git clone https://github.com/if08017/consul-ui.git
+or
+git clone https://masto@code.dimo.co.id/devops/consul-ui.git
+mv consul-ui consul
 ```
 
 ```
 # Bootstrap / Web UI Server
 ---------------------------
+cd /root
 wget https://releases.hashicorp.com/consul/0.6.4/consul_0.6.4_web_ui.zip
-unzip consul_0.6.4_web_ui.zip
+unzip consul_0.6.4_web_ui.zip -d consul-ui
 rm -rf consul_0.6.4_web_ui.zip
 cd /root/consul
 cp bootstrap.json config.json

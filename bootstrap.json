@@ -4,7 +4,7 @@
     "server" : true,
     "datacenter" : "consul-ui",
     "data_dir" : "/tmp/consul",
-    "ui_dir" : "/root/dist",
+    "ui_dir" : "/root/consul-ui",
     "encrypt" : "__ENCRYPT__",
     "log_level" : "INFO",
     "enable_syslog" : true,
