@@ -1,6 +1,5 @@
 # Consul
-We need three or more servers.
-Consul service discovery tool examples :
+We need three or more servers :
 consul-bootstrap
 consul-server
 consul-agent
@@ -13,21 +12,21 @@ yum -y install git unzip wget
 cd /root
 wget https://releases.hashicorp.com/consul/0.8.5/consul_0.8.5_linux_amd64.zip?_ga=2.128066436.964449614.1499710749-1685302108.1499710749
 unzip consul_0.8.5_linux_amd64.zip
-rm -f consul_0.8.5_linux_amd64.zip
+rm -rf consul_0.8.5_linux_amd64.zip
 mv consul /usr/bin/
-git clone https://github.com/andrewpuch/consul_demo.git
+git clone https://github.com/if08017/consul-ui.git
 ```
 
 ```
 # Bootstrap / Web UI Server
 ---------------------------
-wget https://dl.bintray.com/mitchellh/consul/0.5.2_web_ui.zip
-unzip 0.5.2_web_ui.zip
-rm -f 0.5.2_web_ui.zip
-cd /root/consul_demo
+wget https://releases.hashicorp.com/consul/0.6.4/consul_0.6.4_web_ui.zip
+unzip consul_0.6.4_web_ui.zip
+rm -rf consul_0.6.4_web_ui.zip
+cd /root/consul
 cp bootstrap.json config.json
 
-# Save this keygen! Note, if your key has a slash in it you need to escape them for setup.sh. Or just regenerate one until it doesn't have a slash :)
+# generate key and keep it
 consul keygen
 ```
 
@@ -54,4 +53,28 @@ nohup consul agent -config-dir /root/consul_demo/config.json &
 curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/key1
 curl http://localhost:8500/v1/kv/web/key1
 curl http://localhost:8500/v1/kv/web/key1?raw
+```
+
+Create service on all consul server
+```
+[Unit]
+Description=consul agent
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+EnvironmentFile=-/etc/sysconfig/consul
+Environment=GOMAXPROCS=2
+Restart=on-failure
+ExecStart=/usr/bin/consul agent -config-dir=/root/consul_demo/config.json -rejoin
+ExecReload=/bin/kill -HUP $MAINPID
+KillSignal=SIGTERM
+
+[Install]
+WantedBy=multi-user.target
+```
+Start service
+```
+systemctl start consul.service
+systemctl enable consul
 ```
